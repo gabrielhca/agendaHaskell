@@ -96,7 +96,7 @@ mainLoop tarefas = do
             hFlush stdout
             arquivo <- getLine
             novasTarefas <- tryIOError (carregarDeArquivo arquivo) 
-            case novasTarefas of
+            case novasTarefas of --sem isso, se o arquivo não for encontrado o programa acaba
                 Left _ -> do
                     putStrLn "Erro, o arquivo não foi encontrado!"
                     mainLoop tarefas
@@ -117,7 +117,6 @@ mainLoop tarefas = do
             let novas = adicionarTarefa novaTarefa tarefas
             putStrLn "Tarefa adicionada com sucesso!"
             mainLoop novas
-            --adicionar tratamento de erro de ID duplo em funcoes.hs
 
         "4" -> do
             putStr "Digite o ID da tarefa a ser removida: "
