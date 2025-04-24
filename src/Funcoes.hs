@@ -30,7 +30,7 @@ import Data.Time (Day, parseTimeM, defaultTimeLocale)
 import Data.Char(toLower)
 import System.IO (hFlush,stdout)
 
-splitOnChar :: Char -> String -> [String]
+splitOnChar :: Char -> String -> [String] --divide a string utilizando um delimitador
 splitOnChar _ [] = [""]
 splitOnChar delim (x:xs)
     | x == delim = "" : rest
@@ -99,14 +99,14 @@ buscarPorPalavraChave p l = recursaoGenerica (\t -> elem p (tags t)) l
 
 -- gestao de prazos
 
-verificarAtrasos :: [Tarefa] -> Day -> [Tarefa] --retorna as tarefas com prazo < data atual
+verificarAtrasos :: [Tarefa] -> Day -> [Tarefa] --retorna as tarefas com prazo < data atual e status pendente
 verificarAtrasos tarefas hoje =
     filter(\t -> case prazo t of
                   Just d -> d < hoje && status t == Pendente
                   Nothing -> False) tarefas
 
 
-calcularDiasRestantes :: Tarefa -> Day -> Maybe Int 
+calcularDiasRestantes :: Tarefa -> Day -> Maybe Int  --calcula os dias restante para o prazo
 calcularDiasRestantes t hoje =
     case prazo t of
         Just d -> Just (fromIntegral (diffDays d hoje))
@@ -114,10 +114,10 @@ calcularDiasRestantes t hoje =
 
 --tags
 
-filtrarPorTag :: String -> [Tarefa] -> [Tarefa]  
+filtrarPorTag :: String -> [Tarefa] -> [Tarefa]  -- pesquisa as tarefas com a tag especificada
 filtrarPorTag p tarefas = recursaoGenerica (\t -> elem p (tags t)) tarefas
 
-nuvemDeTags :: [Tarefa] -> [(String, Int)]
+nuvemDeTags :: [Tarefa] -> [(String, Int)]  --retorna uma lista de tags com suas frequencias de uso
 nuvemDeTags tarefas =
     let todasTags = concatMap tags tarefas
         mapa = foldr (\tag acc -> Map.insertWith (+) tag 1 acc) Map.empty todasTags
@@ -192,5 +192,5 @@ lerEntradaValidada prompt parser = do
           return 
           (parser entrada)
           
-lerPrazo :: String -> Maybe Day
+lerPrazo :: String -> Maybe Day  --le o prazo utilizando o Data.Time com o formato sendo(ano-mes-dia)
 lerPrazo d = parseTimeM True defaultTimeLocale "%Y-%m-%d" d
