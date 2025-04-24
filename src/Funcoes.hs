@@ -65,18 +65,14 @@ lerStatus s = case map toLower s of
      "pendente"  -> Just Pendente
      "concluida" -> Just Concluida
      _           -> Nothing
-{-
+
 mostrarPrazo :: Show a => Maybe a -> String
-mostrarPrazo (Just p) = show p
+mostrarPrazo (Just p) = drop 5 (show (Just p))
 mostrarPrazo Nothing = "indefinido"
 
 listarTarefas :: [Tarefa] -> IO ()
 listarTarefas tarefas =
-    mapM_ (\t -> putStrLn $ "- [" ++ show (idTarefa t) ++ "] " ++ descricao t ++ " (" ++ show (status t) ++ ") Prazo: " ++ mostrarPrazo t) tarefas
--}
-listarTarefas :: [Tarefa] -> IO ()
-listarTarefas tarefas =
-    mapM_ (\t -> putStrLn $ "- [" ++ show (idTarefa t) ++ "] " ++ descricao t ++ " (" ++ show (status t) ++ ")") tarefas
+    mapM_ (\t -> putStrLn $ "- [" ++ show (idTarefa t) ++ "] " ++ descricao t ++ " (" ++ show (status t) ++ ") Prazo: " ++  mostrarPrazo (prazo t)) tarefas
 
 --funcoes avancadas
 
