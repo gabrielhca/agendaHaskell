@@ -1,0 +1,12 @@
+dist-newstyle/
+cabal.project.local
+*.hi
+*.o
+*.exe
+*.out
+*.a
+*.dyn_o
+*.dyn_hi
+Main
+.stack-work/
+
