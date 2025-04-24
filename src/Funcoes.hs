@@ -59,16 +59,24 @@ marcarConcluida n (x:xs)
         case marcarConcluida n xs of
             Left False -> Left False
             Right l -> Right (x : l)
+
 lerStatus :: String -> Maybe Status
 lerStatus s = case map toLower s of
      "pendente"  -> Just Pendente
      "concluida" -> Just Concluida
      _           -> Nothing
+{-
+mostrarPrazo :: Show a => Maybe a -> String
+mostrarPrazo (Just p) = show p
+mostrarPrazo Nothing = "indefinido"
+
+listarTarefas :: [Tarefa] -> IO ()
+listarTarefas tarefas =
+    mapM_ (\t -> putStrLn $ "- [" ++ show (idTarefa t) ++ "] " ++ descricao t ++ " (" ++ show (status t) ++ ") Prazo: " ++ mostrarPrazo t) tarefas
+-}
 listarTarefas :: [Tarefa] -> IO ()
 listarTarefas tarefas =
     mapM_ (\t -> putStrLn $ "- [" ++ show (idTarefa t) ++ "] " ++ descricao t ++ " (" ++ show (status t) ++ ")") tarefas
-
-
 
 --funcoes avancadas
 
