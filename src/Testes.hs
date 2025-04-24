@@ -2,7 +2,7 @@ module Testes where
 
 import Tipos
 import Funcoes
-import Data.Time.Calendar (Day, fromGregorian) -- Especifica um prazo (prazo :: Maybe Day) de forma clara e tipada.
+import Data.Time.Calendar (Day, fromGregorian) -- Especifica um prazo de forma clara e tipada.
 import Test.QuickCheck
 import Data.List (sortBy)
 
@@ -20,7 +20,8 @@ tarefas =
   , Tarefa 5 "Consulta médica" Concluida Baixa Pessoal
       (Just (fromGregorian 2025 4 10)) ["saude"]
   ]
-  
+
+-- função que realiza os teste manuais
 executarTestes :: IO ()
 executarTestes = do
   putStrLn "\nIniciando testes...\n"
