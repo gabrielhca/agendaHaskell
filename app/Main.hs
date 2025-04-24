@@ -20,7 +20,7 @@ criarTarefa tarefas = do
     putStr "Descrição: "
     hFlush stdout
     descricao <- getLine
-
+    
     categoria <- lerEntradaValidada "Categoria: " lerCategoria
     prioridade <- lerEntradaValidada "Prioridade: " lerPrioridade
     prazo <- lerEntradaValidada "Prazo(ex: 2025-04-23):" $ \s -> if null s then Just Nothing else fmap Just (lerPrazo s)
@@ -79,8 +79,7 @@ menu = do
     putStrLn "15. Gerar nuvem de tags"
     putStrLn "16. Criar relatório"
     putStrLn "17. Executar testes manuais"
-    putStrLn "18. Executar testes QuickCheck"
-    putStrLn "19. Sair"
+    putStrLn "18. Sair"
     putStr "Escolha uma opção: "
     hFlush stdout -- força a exibição imediata, evitando o buffer
 
@@ -95,9 +94,14 @@ mainLoop tarefas = do
             putStr "Digite o nome do arquivo para carregar: "
             hFlush stdout
             arquivo <- getLine
-            novasTarefas <- carregarDeArquivo arquivo
-            putStrLn $ "Tarefas carregadas de " ++ arquivo
-            mainLoop novasTarefas
+            novasTarefas <- tryIOError (carregarDeArquivo arquivo) 
+            case novasTarefas of
+                Left _ -> do
+                    putStrLn "Erro, o arquivo não foi encontrado!"
+                    mainLoop tarefas
+                Right novasTarefas -> do
+                    putStrLn $ "Tarefas carregadas de " ++ arquivo
+                    mainLoop novasTarefas
 
         "2" -> do
             putStr "Digite o nome do arquivo para salvar: "
@@ -214,12 +218,7 @@ mainLoop tarefas = do
             Testes.executarTestes
             mainLoop tarefas
 
-        "18" -> do
-            putStrLn "Executando testes QuickCheck..."
-            Testes.executarQuickCheck
-            mainLoop tarefas
-
-        "19" -> putStrLn "Até logo! :)"
+        "18" -> putStrLn "Até logo! :)"
 
         _   -> do
             putStrLn "Opção inválida! Tente novamente."
