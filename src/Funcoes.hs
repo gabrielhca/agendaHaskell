@@ -1,5 +1,3 @@
---como no pdf diz que o identificador e unico, nao vou me preocupar em ter
---dois IDs iguais
 module Funcoes (
     adicionarTarefa,
     removerTarefa,
@@ -30,6 +28,7 @@ import Data.Time (Day, parseTimeM, defaultTimeLocale)
 import Data.Char(toLower)
 import System.IO (hFlush,stdout)
 
+--essa função é de uma biblioteca que estava dando erro na hora de ser importada, pegamos a sua definição e implementamos no código
 splitOnChar :: Char -> String -> [String] --divide a string utilizando um delimitador
 splitOnChar _ [] = [""]
 splitOnChar delim (x:xs)
@@ -40,9 +39,9 @@ splitOnChar delim (x:xs)
 
 --funcoes basicas
 adicionarTarefa :: Tarefa -> [Tarefa] -> [Tarefa]
-adicionarTarefa tarefa listaTarefas = tarefa : listaTarefas
+adicionarTarefa tarefa listaTarefas = tarefa : listaTarefas --adiciona um item do tipo Tarefa na lista dada como segundo argumento
 
-removerTarefa :: Int -> [Tarefa] -> Either Bool [Tarefa]
+removerTarefa :: Int -> [Tarefa] -> Either Bool [Tarefa] --remove uma tarefa da lista dada pelo Id dela, se não existir uma tarefa com esse Id, e função retorna False
 removerTarefa _ [] = Left False
 removerTarefa n (x:xs)
     |idTarefa x == n = Right xs
@@ -51,7 +50,7 @@ removerTarefa n (x:xs)
             Left False -> Left False
             Right r -> Right (x : r)
 
-marcarConcluida :: Int -> [Tarefa] -> Either Bool [Tarefa]
+marcarConcluida :: Int -> [Tarefa] -> Either Bool [Tarefa] --muda o status de uma tarefa dado seu Id para Concluída, se a tarefa não for encontrada, a função retorna False
 marcarConcluida _ [] = Left False
 marcarConcluida n (x:xs)
     |idTarefa x == n = Right (x {status = Concluida} : xs)
@@ -66,7 +65,7 @@ lerStatus s = case map toLower s of
      "concluida" -> Just Concluida
      _           -> Nothing
 
-mostrarPrazo :: Show a => Maybe a -> String
+mostrarPrazo :: Show a => Maybe a -> String --show prazo retorna "Just aaaa-mm-dd", esssa função pega um prazo (data) e retorna uma string "aaaa-mm-dd" ou "indefinido" se não conseguir achar um prazo no argumento dado
 mostrarPrazo (Just p) = drop 5 (show (Just p))
 mostrarPrazo Nothing = "indefinido"
 
@@ -76,25 +75,25 @@ listarTarefas tarefas =
 
 --funcoes avancadas
 
-recursaoGenerica :: (Tarefa -> Bool) -> [Tarefa] -> [Tarefa]
+recursaoGenerica :: (Tarefa -> Bool) -> [Tarefa] -> [Tarefa] --as 5 funções seguintes estavam muito parecidas, então implementei essa função de alta ordem para melhorar o código, ela pega uma função com um argumento que retorna booleano e faz a recursao necessária
 recursaoGenerica _ [] = []
 recursaoGenerica condicao (x:xs)
     |condicao x = x : recursaoGenerica condicao xs
     |otherwise = recursaoGenerica condicao xs
 
-listarPorCategoria :: Categoria -> [Tarefa] -> [Tarefa]
+listarPorCategoria :: Categoria -> [Tarefa] -> [Tarefa] --lista todas as tarefas de uma determinada categoria
 listarPorCategoria c l = recursaoGenerica (\t -> categoria t == c) l
 
-listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa]
+listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa] --lista todas as tarefas com uma determinada prioridade
 listarPorPrioridade p l = recursaoGenerica (\t -> prioridade t == p) l
 
-ordenarPorPrioridade :: [Tarefa] -> [Tarefa]
+ordenarPorPrioridade :: [Tarefa] -> [Tarefa] --ordena uma lista de tarefas da prioridade alta até a baixa
 ordenarPorPrioridade l = concat [listarPorPrioridade Alta l, listarPorPrioridade Media l, listarPorPrioridade Baixa l]
 
-filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa]
+filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa] --retorna uma lista com as tarefas do status desejado
 filtrarPorStatus s l = recursaoGenerica (\t -> status t == s) l
 
-buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa]
+buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa] --retorna uma lista com todas as tarefas com a tag desejada
 buscarPorPalavraChave p l = recursaoGenerica (\t -> elem p (tags t)) l
 
 -- gestao de prazos
