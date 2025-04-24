@@ -21,8 +21,8 @@ criarTarefa tarefas = do
     hFlush stdout
     descricao <- getLine
 
-    categoria <- lerEntradaValidada "Categoria: " lerCategoria
-    prioridade <- lerEntradaValidada "Prioridade: " lerPrioridade
+    categoria <- lerEntradaValidada "Digite a categoria (Trabalho/Estudos/Pessoal/Outro): " lerCategoria
+    prioridade <- lerEntradaValidada "Digite a prioridade (Alta/Media/Baixa): " lerPrioridade
     prazo <- lerEntradaValidada "Prazo(ex: 2025-04-23):" $ \s -> if null s then Just Nothing else fmap Just (lerPrazo s)
     putStr "Tags (separadas por vírgula): "
     hFlush stdout
